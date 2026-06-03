@@ -111,3 +111,28 @@ This should produce an assembly file named `hello.s` in the same directory as ou
 
 ## Step 4: Our actual main project 
 We'll be writing a small kernel to experiment with. For this project, we'll be writing an int8 dot product kernel, which takes two int8 vectors and computes their dot product. This is a common operation in machine learning workloads, while remaining small enough that we can actually feasibly analyze the generated machine code.
+
+
+First, create a new file named `dot_int8.mojo` and add the following code:
+
+```mojo
+fn dot_int8(
+    a: UnsafePointer[Int8, origin=...],
+    b: UnsafePointer[Int8, origin=...],
+    n: Int,
+) -> Int32:
+    var acc: Int32 = 0
+    for i in range(n):
+        acc += Int32(a[i]) * Int32(b[i])
+    return acc
+
+
+fn main():
+    var a = List[Int8](length=8, fill=Int8(1))
+    var b = List[Int8](length=8, fill=Int8(2))
+    var result = dot_int8(a.unsafe_ptr(), b.unsafe_ptr(), 8)
+    print(result)
+```
+Note that defining the `main` function is necessary to ensure that the `dot_int8` function is actually compiled.
+
+We'll build it towards two different CPU targets, `generic-rv64` and `sifiv-x280`, to see how the generated machine code differs between the basic RISC-V architecture and one optimized for vector operations. 
