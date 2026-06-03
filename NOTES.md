@@ -135,4 +135,16 @@ fn main():
 ```
 Note that defining the `main` function is necessary to ensure that the `dot_int8` function is actually compiled.
 
-We'll build it towards two different CPU targets, `generic-rv64` and `sifiv-x280`, to see how the generated machine code differs between the basic RISC-V architecture and one optimized for vector operations. 
+We'll build it towards two different CPU targets, `generic-rv64` and `sifiv-x280`, to see how the generated machine code differs between the basic RISC-V architecture and one optimized for vector operations. So that's two separate build commands:
+
+```bash
+uv run mojo build dot_int8.mojo --target-triple=riscv64-unknown-linux-gnu --target-cpu=generic-rv64 --emit=asm
+```
+
+```bash
+uv run mojo build dot_int8.mojo --target-triple=riscv64-unknown-linux-gnu --target-cpu=sifive-x280 --emit=asm
+```
+
+*NOTE*: Actual assembly exploration and analysis will be done in the dedicated blog post.
+
+## Step 5: Add SIMD vectorization with MOJO's metaprogramming features
