@@ -1,5 +1,4 @@
 # Pure SIMD primitive: no loops, no pointers, just vector arithmetic.
-# This is the cleanest test for "does Mojo emit RVV for vector ops on RISC-V?"
 fn dot_int8_simd_primitive(
     a: SIMD[DType.int8, 16],
     b: SIMD[DType.int8, 16],
@@ -13,7 +12,7 @@ fn dot_int8_simd_primitive(
 
 
 # Looped version: iterates over a buffer of int8s in chunks of 16.
-# Assumes n is a multiple of 16 to keep the loop body trivial.
+# Assumes n is a multiple of 16 to simplify the loop body
 fn dot_int8_simd_loop(
     a: UnsafePointer[Int8, origin=...],
     b: UnsafePointer[Int8, origin=...],
